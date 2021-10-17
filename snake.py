@@ -1,37 +1,25 @@
 import random
 players = [
     {
-        "name": "Harshal",
-        "pos": 0,
-        "isActive": False,
-        "winner": False,
-    },
-    {
-        "name": "Jatin",
-        "pos": 0,
-        "isActive": False,
-        "winner": False,
-    },
-    {
-        "name": "Devanshi",
-        "pos": 0,
-        "isActive": False,
-        "winner": False,
-    },
-    {
-        "name": "Nandani",
+        "name": "a",
         "pos": 0,
         "isActive": True,
         "winner": False,
     },
     {
-        "name": "Hussnain",
+        "name": "b",
         "pos": 0,
         "isActive": False,
         "winner": False,
     },
     {
-        "name": "Sakshi",
+        "name": "c",
+        "pos": 0,
+        "isActive": False,
+        "winner": False,
+    },
+    {
+        "name": "d",
         "pos": 0,
         "isActive": False,
         "winner": False,
@@ -141,17 +129,15 @@ board = [
     {"pos": 99, "snake": "Null", "ladder": "Null"}
 ]
 
-
 def find_player():
     for player in players:
         if (player["isActive"] == True and player["winner"] == False):  
             return player
     
 def roll_dice():
-    dice_value = random.randint(1, 6)
-    # print(dice_value)
+    dice_value = random.randint(1, 5)
+    print(dice_value)
     curr_player = find_player()
-    # print(curr_player)
     
     if(curr_player["pos"] == 0):
         if(dice_value != 6):
@@ -161,17 +147,20 @@ def roll_dice():
     else:
         move(dice_value, curr_player)
 
-    
-
 
 def move(dice, curr_player):
     
     player_index = players.index(curr_player)
     destination = 0
     destination = players[player_index]["pos"] + dice
-    if(destination >= 100):
+    if(destination > 100):
         curr_player["winner"] = False
         players[player_index]["isActive"] = True
+        curr_player = ChangePlayer(curr_player)
+
+    elif(destination == 100):
+        curr_player["winner"] = True
+        players[player_index]["isActive"] = False
         curr_player = ChangePlayer(curr_player)
     
     elif(board[destination]["snake"]!="Null"):
@@ -186,31 +175,34 @@ def move(dice, curr_player):
         players[player_index]["pos"] += destination
         curr_player = ChangePlayer(curr_player)
 
-
-
-def ChangePlayer(curr_player):
-    for i, player in enumerate(players):
-        if(player['name'] == curr_player['name']):
-            player_index = i
-
+def ChangePlayer(curr_player, index = None):
     curr_player["isActive"] = False
+    print('index_initial_val',index)
 
-    player_index += 1
-    if(player_index!=len(players) and players[player_index]["winner"] != False):
+    if(index != 0 or index == None):
+        for i, player in enumerate(players):
+            if(player['name'] == curr_player['name']):
+                player_index = i
+
         player_index += 1
-    elif(player_index == len(players)):
+        if(player_index == len(players)):
+            ChangePlayer(curr_player, 0)
+    else:
         player_index = 0
+
+    print('final value of player',player_index)
+
     curr_player = players[player_index]
+    print(curr_player)
+    if(player_index!=len(players) and players[player_index]["winner"] != False):
+        print("Hey satisfied", curr_player)
+        ChangePlayer(curr_player)
     curr_player["isActive"] = True
-    
+    print("curr_player:::::", curr_player)
     return curr_player
     
-
-
 if __name__=="__main__":
     for player in players:
-       if player["winner"] is False:
+        if player["winner"] is False:
             roll_dice()
-
-    
-
+        print(player,end="\n")
